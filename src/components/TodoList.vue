@@ -2,15 +2,21 @@
   <div style="margin-left: 10px;" id="todo-list">
     <h1>{{ header }}</h1>
     <ul>
-      <li v-for="todo in todoList" v-bind:key="todo.id">
+      <li v-for="todo of ToDos" v-bind:key="todo.id">
         <div>
           <label>
-            <input type="radio" name="radio" id="todo.id" />
+            <input
+              type="checkbox"
+              name="checkbox"
+              id="todo.Name"
+              :checked="todo.IsCompleted"
+              @click="completedToggle(todo)"
+            />
             <span></span>
           </label>
           <div class="data-container">
-          <img style="float:right;" src="../assets/trash.svg" />
-          <h4>{{ todo.text }}</h4>
+            <img style="float:right;" @click="deleteItem(todo)" src="../assets/trash.svg" />
+            <h4>{{ todo.Name }}</h4>
           </div>
         </div>
       </li>
@@ -25,26 +31,51 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import TypesComponent from './TypesList.vue'
+import { Component, Prop, Vue } from "vue-property-decorator";
+import TypesComponent from "./TypesList.vue";
+import store from "../store";
+import ToDoModel from "../models/ToDoModel";
 
 @Component({
-  components : { TypesComponent }
+  components: { TypesComponent }
 })
 export default class TodoList extends Vue {
-  header = "Today"
+  private todos: Array<ToDoModel>;
+
+  constructor() {
+    super();
+    this.todos = [];
+  }
+
+  header = "Today";
   todoList = [
     { id: 1, text: "Start making a Presentation" },
-        { id: 2, text: "Pay for rent" },
-        { id: 3, text: "Buy a milk" },
-        { id: 4, text: "Don't forget to pick up michel from school" },
-        { id: 5, text: "Buy a chocolate for Charlotte" }
-      ];
+    { id: 2, text: "Pay for rent" },
+    { id: 3, text: "Buy a milk" },
+    { id: 4, text: "Don't forget to pick up michel from school" },
+    { id: 5, text: "Buy a chocolate for Charlotte" }
+  ];
+
+  get ToDos(): ToDoModel[] {
+    let todos = this.$store.state.todos; //this.todos
+    return todos;
+  }
+
+  deleteItem(todoModel: ToDoModel) {
+    console.log("tapan, delete:", todoModel.Name);
+    this.$store.dispatch("deleteToDo", todoModel);
+  }
+
+  completedToggle(todoModel: ToDoModel) {
+    console.log("tapan, toggle:", todoModel.Name + ":" + todoModel.IsCompleted);
+    this.$store.dispatch("completedToggle", todoModel);
+  }
 }
 </script>
 
 <style scoped>
 h1 {
+  text-align: start;
   margin-left: 40px;
 }
 ul {
@@ -79,11 +110,11 @@ span {
   -ms-user-select: none;
   user-select: none;
 }
-input[type="radio"] {
+input[type="checkbox"] {
   visibility: hidden;
   position: absolute;
 }
-input[type="radio"] ~ span {
+input[type="checkbox"] ~ span {
   cursor: pointer;
   width: 31px;
   height: 31px;
@@ -93,12 +124,12 @@ input[type="radio"] ~ span {
   vertical-align: middle;
   background-image: url("../assets/checkbox.svg");
 }
-input[type="radio"]:checked ~ span {
+input[type="checkbox"]:checked ~ span {
   background-image: url("../assets/checkbox-checked.svg");
 }
 .data-container {
- border-bottom: 1px solid #d3d3d3;
- margin-left:45px;
-} 
-
+  border-bottom: 1px solid #d3d3d3;
+  margin-left: 45px;
+  text-align: start;
+}
 </style>

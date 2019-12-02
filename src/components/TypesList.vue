@@ -21,11 +21,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class TypesList extends Vue {
-  title = 'Lists';
+  title = "Lists";
   typeList = [
     {
       id: 1,
@@ -33,7 +33,7 @@ export default class TypesList extends Vue {
       task: 1,
       bgColor: "#ebeff5",
       titleColor: "#252A31",
-      taskColor: "#a9a9a9",
+      taskColor: "#a9a9a9"
     },
     {
       id: 2,
@@ -41,7 +41,7 @@ export default class TypesList extends Vue {
       task: 2,
       bgColor: "#66dda5",
       titleColor: "#ffffff",
-      taskColor: "#ffffff",
+      taskColor: "#ffffff"
     },
     {
       id: 3,
@@ -49,7 +49,7 @@ export default class TypesList extends Vue {
       task: 3,
       bgColor: "#f2606f",
       titleColor: "#ffffff",
-      taskColor: "#d3d3d3",
+      taskColor: "#d3d3d3"
     },
     {
       id: 4,
@@ -57,7 +57,7 @@ export default class TypesList extends Vue {
       task: 1,
       bgColor: "#fee66b",
       titleColor: "#252A31",
-      taskColor: "#a9a9a9",
+      taskColor: "#a9a9a9"
     },
     {
       id: 5,
@@ -65,9 +65,9 @@ export default class TypesList extends Vue {
       task: 4,
       bgColor: "#b57cfc",
       titleColor: "#ffffff",
-      taskColor: "#ffffff",
+      taskColor: "#ffffff"
     }
-  ]
+  ];
 }
 </script>
 
