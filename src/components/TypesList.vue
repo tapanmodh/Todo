@@ -4,10 +4,14 @@
     <ul>
       <li
         class="type"
-        v-for="type in typeList"
+        v-for="type in ToTypes"
         :style="{ backgroundColor: type.bgColor }"
         v-bind:key="type.id"
       >
+        <label v-if="isRadio">
+          <input type="radio" name="radio" id="type.id" v-on:change="$emit('selected', type.text)" />
+          <span></span>
+        </label>
         <div v-bind:style="{ 'color': type.titleColor }">{{ type.text }}</div>
         <div
           class="type-task"
@@ -22,11 +26,16 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import ToDoModel from "../models/ToDoModel";
+import TypesModel from "../models/TypesModel";
+import store from "../store";
 
 @Component
 export default class TypesList extends Vue {
+  @Prop({ type: Boolean, default: true }) isRadio!: boolean;
+
   title = "Lists";
-  typeList = [
+  defaultTypeList = [
     {
       id: 1,
       text: "Inbox",
@@ -68,6 +77,18 @@ export default class TypesList extends Vue {
       taskColor: "#ffffff"
     }
   ];
+
+  get ToTypes(): Array<TypesModel> {
+    var todos = this.$store.state.todos as Array<ToDoModel>;
+    let typesList = Array<TypesModel>();
+    typesList = this.defaultTypeList;
+    for (var type of typesList) {
+      var task = todos.filter(todo => type.text == todo.Type);
+      console.log("task:", task.length);
+      type.task = task.length;
+    }
+    return typesList;
+  }
 }
 </script>
 
@@ -94,5 +115,35 @@ ul {
 .type-task {
   font-size: 13px;
   padding-top: 5px;
+}
+
+span {
+  width: 31px;
+  display: block;
+  position: relative;
+  cursor: pointer;
+  float: right;
+  margin-top: 7px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+input[type="radio"] {
+  visibility: hidden;
+  position: absolute;
+}
+input[type="radio"] ~ span {
+  cursor: pointer;
+  width: 31px;
+  height: 31px;
+  display: inline-block;
+  background-size: 31px 31px;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  background-image: url("../assets/checkbox.svg");
+}
+input[type="radio"]:checked ~ span {
+  background-image: url("../assets/checkbox-checked.svg");
 }
 </style>

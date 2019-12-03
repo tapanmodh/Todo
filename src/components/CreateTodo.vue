@@ -3,14 +3,13 @@
     <button class="btn cancel" @click="cancel">Cancel</button>
     <button class="btn done" @click="add">Done</button>
     <div id="create-item" class="create-item">
-      <!-- <img class="create-checkbox" src="../assets/checkbox.svg" />-->
       <label>
         <input type="checkbox" name="checkbox" id="checkbox" v-model="model.IsCompleted" />
         <span></span>
       </label>
       <textarea class="create-text" v-model="model.Name" placeholder="What do you want to do?"></textarea>
     </div>
-    <TypesComponent />
+    <TypesComponent v-on:selected="selectedType = $event"/>
   </div>
 </template>
 
@@ -28,35 +27,40 @@ import ToDoModel from "../models/ToDoModel";
 export default class CreateTodo extends Vue {
   private todos: Array<ToDoModel>;
   private model: ToDoModel;
+  private selectedType: string
 
   constructor() {
     super();
     this.todos = [];
     this.model = new ToDoModel();
+    this.selectedType = ''
   }
 
   get ToDos(): ToDoModel[] {
-    let todos = this.$store.state.todos; //this.todos
+    let todos = this.$store.state.todos;
     return todos;
   }
 
   cancel() {
     router.go(-1);
-  }
+ }
 
   add() {
-    //console.log('tapan:',this.model.Name)
+    console.log('tapan:selectedType',this.selectedType)
+    
     if (this.ToDos.some(x => x.Name == this.model.Name)) {
       //this.message = `ToDo item ${this.model.Name} already exists in your list`;
       return;
     }
 
+    this.model.Type = this.selectedType
     console.log("tapan:isCompleted", this.model.IsCompleted);
     this.$store
       .dispatch("addToDo", this.model)
       .then(() => {
         setTimeout(() => {
           console.log("tapan:", this.$store.state.todos.length);
+          router.go(-1)
         }, 1500);
       })
       .catch(error => {
@@ -95,12 +99,6 @@ export default class CreateTodo extends Vue {
   float: right;
   font-weight: bold;
 }
-/* .create-checkbox {
-  width: 20px;
-  height: 20px;
-  vertical-align: top;
-  float: left;
-} */
 span {
   width: 20px;
   display: block;

@@ -21,7 +21,7 @@
         </div>
       </li>
     </ul>
-    <TypesComponent />
+    <TypesComponent v-bind:isRadio="false"/>
     <router-link to="/create" class="float">
       <i class="float-image">
         <img src="../assets/plus.svg" />
@@ -41,7 +41,7 @@ import ToDoModel from "../models/ToDoModel";
 })
 export default class TodoList extends Vue {
   private todos: Array<ToDoModel>;
-
+  
   constructor() {
     super();
     this.todos = [];
